@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="/_ah/channel/jsapi"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <style type="text/css">
+    #pixels {
+      margin-left: auto;
+      margin-right: auto;
+      border-collapse: collapse;
+    }
+    #pixels > tbody > tr > td {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #000;
+    }
+    #waitingWheel {
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+    </style>
+    <title>Last Across the Finish Line</title>
+  </head>
+  <body>
+    {{ table|safe }}
+    <div id="waitingWheel"><img height="32px" width="32px" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="></div>
+    <script type="text/javascript">
+      var COLUMNS = 8;
+
+      var setStatus = function(value) {
+        if (value !== 'complete') {
+          $('#waitingWheel').show();
+        } else {
+          $('#waitingWheel').hide();
+        }
+      }
+
+      var colorSquare = function(row, column, color) {
+        var squareIndex = COLUMNS*row + column;
+        var squareId = '#square' + squareIndex.toString();
+        $(squareId).css('background-color', color);
+      }
+
+      var onOpened = function() {
+        console.log('Socket opened');
+        $.get('/begin-work', function(data) {
+          var response = JSON.parse(data);
+
+          if (response.populate_init_succeeded) {
+            console.log('Loading began');
+            setStatus('Loading began');
+          } else {
+            console.log('Loading failed');
+          }
+        });
+      }
+
+      var onMessage = function(msg) {
+        var response = JSON.parse(msg.data);
+        if (response.status !== undefined) {
+          setStatus(response.status);
+        } else {
+          colorSquare(response.row, response.column, response.color);
+        }
+      }
+
+      var onError = function() {
+        console.log('Socket error');
+      }
+
+      var onClose = function() {
+        console.log('Socket closed');
+      }
+
+      channel = new goog.appengine.Channel('{{ token }}');
+      socket = channel.open();
+      socket.onopen = onOpened;
+      socket.onmessage = onMessage;
+      socket.onerror = onError;
+      socket.onclose = onClose;
+    </script>
+  </body>
+</html>
