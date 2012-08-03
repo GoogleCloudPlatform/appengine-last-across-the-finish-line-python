@@ -57,6 +57,13 @@ class TaskBatcher(ndb.Model):
     channel.send_message(session_id, json.dumps({'status': 'incomplete'}))
 
   @ndb.transactional
+  def Ready(self):
+    self.all_tasks_loaded = True
+    self.put()
+
+    self.CheckComplete()
+
+  @ndb.transactional
   def CleanUp(self):
     children = BatchTask.query(ancestor=self.key).fetch(
         MAX_KEYS, keys_only=True)
@@ -71,15 +78,13 @@ class TaskBatcher(ndb.Model):
 def _PopulateBatch(session_id, work):
   batcher_key = ndb.Key(TaskBatcher, session_id)
   batcher = TaskBatcher(key=batcher_key)
-  batcher.put()
+  ndb.transaction(batcher.put)
 
   for method, args, kwargs in work:
     task = BatchTask(parent=batcher_key)
     task.Populate(method, *args, **kwargs)
 
-  batcher.all_tasks_loaded = True
-  batcher.put()
-  # TODO: Call check complete here
+  batcher.Ready()
 
 
 def PopulateBatch(session_id, work):
