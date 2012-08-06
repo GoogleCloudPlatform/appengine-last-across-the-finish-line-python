@@ -81,11 +81,6 @@ class BeginWork(webapp2.RequestHandler):
 class MainPage(webapp2.RequestHandler):
   """Handler to serve main page with static content."""
 
-  @webapp2.cached_property
-  def Jinja2(self):
-    """Cached property holding a Jinja2 instance."""
-    return jinja2.get_jinja2(app=self.app)
-
   def RenderResponse(self, template, **context):
     """Use Jinja2 instance to render template and write to output.
 
@@ -93,7 +88,8 @@ class MainPage(webapp2.RequestHandler):
       template: filename (relative to $PROJECT/templates) that we are rendering
       context: keyword arguments corresponding to variables in template
     """
-    rendered_value = self.Jinja2.render_template(template, **context)
+    jinja2_renderer = jinja2.get_jinja2(app=self.app)
+    rendered_value = jinja2_renderer.render_template(template, **context)
     self.response.write(rendered_value)
 
   @login_required
