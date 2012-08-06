@@ -46,8 +46,7 @@ SQUARES_TO_COLOR = COLUMNS*ROWS
 class BeginWork(webapp2.RequestHandler):
   """Handler to initiate a batch of work."""
 
-  @login_required
-  def get(self):  # pylint:disable-msg=C0103
+  def post(self):  # pylint:disable-msg=C0103
     """A handler which will generate random row, column pairs and spawn work.
 
     Generates SQUARES_TO_COLOR unique row, column pairs and then populates a

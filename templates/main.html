@@ -46,7 +46,7 @@
 
       var onOpened = function() {
         console.log('Socket opened');
-        $.get('/begin-work', function(data) {
+        $.post('/begin-work', function(data) {
           var response = JSON.parse(data);
 
           if (response.populate_init_succeeded) {
