@@ -52,6 +52,28 @@ def GenerateTable(table_id, rows, columns):
   return '\n'.join(table_elts)
 
 
+def RandomRowColumnOrdering(rows, columns):
+  """Generates a random ordering of all row, column pairs.
+
+  Uses random.shuffle to shuffle the integers between 0 and
+  rows*columns - 1 (inclusive) and then maps each of these
+  integers to a corresponding row, column pair.
+
+  Args:
+    rows: The number of rows in the table
+    columns: The number of columns in the table
+  """
+  square_indices = range(rows*columns)
+  random.shuffle(square_indices)
+
+  result = []
+  for index in square_indices:
+    row = index / columns  # Integer division intended
+    column = index % columns
+    result.append((row, column))
+  return result
+
+
 def RandHexColor(length=6):
   """Generates a random color using hexadecimal digits.
 

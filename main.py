@@ -23,7 +23,6 @@ __author__ = 'dhermes@google.com (Daniel Hermes)'
 
 # General libraries
 import json
-import random
 
 # App engine specific libraries
 from google.appengine.api import channel
@@ -34,37 +33,32 @@ from webapp2_extras import jinja2
 
 # App specific libraries
 from display import GenerateTable
+from display import RandomRowColumnOrdering
 from display import SendColor
 from models import PopulateBatch
 
 
 COLUMNS = 8
 ROWS = 8
-SQUARES_TO_COLOR = COLUMNS*ROWS
 
 
 class BeginWork(webapp2.RequestHandler):
   """Handler to initiate a batch of work."""
 
   def post(self):  # pylint:disable-msg=C0103
-    """A handler which will generate random row, column pairs and spawn work.
+    """A handler which will spawn work for random row, column pairs.
 
-    Generates SQUARES_TO_COLOR unique row, column pairs and then populates a
-    batch of workers, each with SendColor. If any type of error is encountered,
-    returns a JSON encoded failure message, otherwise returns a success message.
+    Generates all unique row, column pairs and then populates a batch of
+    workers, each with SendColor. If any type of error is encountered, returns
+    a JSON encoded failure message, otherwise returns a success message.
 
     Uses the user ID of the logged in user as a proxy for session ID.
     """
     try:
       user_id = users.get_current_user().user_id()
 
-      square_indices = range(SQUARES_TO_COLOR)
-      random.shuffle(square_indices)
-
       work = []
-      for index in square_indices:
-        row = index / COLUMNS  # Integer division intended
-        column = index % COLUMNS
+      for row, column in RandomRowColumnOrdering(ROWS, COLUMNS):
         args = (row, column, user_id)
         work.append((SendColor, args, {}))  # No keyword args
 
