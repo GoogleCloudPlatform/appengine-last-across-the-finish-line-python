@@ -57,20 +57,16 @@ class BeginWork(webapp2.RequestHandler):
     """
     try:
       user_id = users.get_current_user().user_id()
-      tuples_encountered = []
+
+      square_indices = range(SQUARES_TO_COLOR)
+      random.shuffle(square_indices)
+
       work = []
-      for _ in range(SQUARES_TO_COLOR):
-        row = random.randrange(ROWS)
-        column = random.randrange(COLUMNS)
-        while (row, column) in tuples_encountered:
-          row = random.randrange(ROWS)
-          column = random.randrange(COLUMNS)
-        tuples_encountered.append((row, column))
-
+      for index in square_indices:
+        row = index / COLUMNS  # Integer division intended
+        column = index % COLUMNS
         args = (row, column, user_id)
-        kwargs = {}
-
-        work.append((SendColor, args, kwargs))
+        work.append((SendColor, args, {}))  # No keyword args
 
       PopulateBatch(user_id, work)
       self.response.out.write(json.dumps({'populate_init_succeeded': True}))
