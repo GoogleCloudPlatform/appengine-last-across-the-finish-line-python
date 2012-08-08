@@ -29,7 +29,7 @@ import random
 from google.appengine.api import channel
 
 
-CHOICES = '0123456789ABCDEF'
+HEX_DIGITS = '0123456789ABCDEF'
 
 
 def GenerateTable(table_id, rows, columns):
@@ -80,7 +80,7 @@ def RandHexColor(length=6):
   Args:
     length: The number of hex digits in the color. Defaults to 6.
   """
-  result = [random.choice(CHOICES) for _ in range(length)]
+  result = [random.choice(HEX_DIGITS) for _ in range(length)]
   return '#' + ''.join(result)
 
 
