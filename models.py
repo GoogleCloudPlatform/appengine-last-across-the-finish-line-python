@@ -53,7 +53,6 @@ def AlwaysComplete(key, method, *args, **kwargs):
     args: The positional arguments to be passed to method.
     kwargs: The keyword arguments to be passed to method.
   """
-  task = key.get()
   try:
     method(*args, **kwargs)  # pylint:disable-msg=W0142
   except:  # pylint:disable-msg=W0702
@@ -61,6 +60,7 @@ def AlwaysComplete(key, method, *args, **kwargs):
     pass
   finally:
     # No need to be transactional since AlwaysComplete is not a transaction
+    task = key.get()
     defer(task.Complete)
 
 
