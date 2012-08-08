@@ -63,9 +63,9 @@ class BeginWork(webapp2.RequestHandler):
         work.append((SendColor, args, {}))  # No keyword args
 
       PopulateBatch(user_id, work)
-      self.response.out.write(json.dumps({'populate_init_succeeded': True}))
+      self.response.out.write(json.dumps({'batch_populated': True}))
     except:  # pylint:disable-msg=W0702
-      self.response.out.write(json.dumps({'populate_init_succeeded': False}))
+      self.response.out.write(json.dumps({'batch_populated': False}))
 
 
 class MainPage(webapp2.RequestHandler):

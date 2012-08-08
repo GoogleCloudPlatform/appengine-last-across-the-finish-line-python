@@ -49,7 +49,7 @@
         $.post('/begin-work', function(data) {
           var response = JSON.parse(data);
 
-          if (response.populate_init_succeeded) {
+          if (response.batch_populated) {
             console.log('Loading began');
             setStatus('Loading began');
           } else {
