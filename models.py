@@ -38,7 +38,7 @@ from google.appengine.ext import ndb
 MAX_KEYS = 100
 
 
-def AlwaysComplete(key, method, *args, **kwargs):
+def AlwaysComplete(task, method, *args, **kwargs):
   """Attempt to run a method and complete a task upon completion or failure.
 
   Runs the method with the provided arguments or catches any errors if the
@@ -48,7 +48,7 @@ def AlwaysComplete(key, method, *args, **kwargs):
   method to be retried in a task.
 
   Args:
-    key: An NDB key for an object representing a task with a Complete method.
+    task: An NDB object representing a task with a Complete method.
     method: A method to be called in this piece of work.
     args: The positional arguments to be passed to method.
     kwargs: The keyword arguments to be passed to method.
@@ -60,7 +60,6 @@ def AlwaysComplete(key, method, *args, **kwargs):
     pass
   finally:
     # No need to be transactional since AlwaysComplete is not a transaction
-    task = key.get()
     defer(task.Complete)
 
 
@@ -85,7 +84,7 @@ class BatchTask(ndb.Model):
     self.put()
 
     kwargs['_transactional'] = True
-    defer(AlwaysComplete, self.key, method, *args, **kwargs)
+    defer(AlwaysComplete, self, method, *args, **kwargs)
 
   @ndb.transactional
   def Complete(self):
