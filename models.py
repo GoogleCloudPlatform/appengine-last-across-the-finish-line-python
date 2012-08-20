@@ -65,7 +65,8 @@ def AlwaysComplete(task, method, *args, **kwargs):
 
 class BatchTask(ndb.Model):
   """Model to represent a task and the status of the task."""
-  completed = ndb.BooleanProperty(default=False)  # pylint:disable-msg=E1101
+  # pylint:disable-msg=E1101
+  completed = ndb.BooleanProperty(default=False, indexed=False)
 
   @ndb.transactional
   def Populate(self, method, *args, **kwargs):
@@ -111,7 +112,7 @@ class TaskBatcher(ndb.Model):
   Expects the key to be a session ID for communicating with a client.
   """
   # pylint:disable-msg=E1101
-  all_tasks_loaded = ndb.BooleanProperty(default=False)
+  all_tasks_loaded = ndb.BooleanProperty(default=False, indexed=False)
 
   def CheckComplete(self):
     """Checks if all tasks with this object as parent have complete.
