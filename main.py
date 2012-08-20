@@ -70,7 +70,7 @@ class BeginWork(webapp2.RequestHandler):
     except:  # pylint:disable-msg=W0702
       # TODO: Consider logging traceback.format_exception(*sys.exc_info()) here
       pass
-    self.response.out.write(json.dumps(response))
+    self.response.write(json.dumps(response))
 
 
 class MainPage(webapp2.RequestHandler):
