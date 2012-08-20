@@ -44,7 +44,8 @@ ROWS = 8
 
 class BeginWork(webapp2.RequestHandler):
   """Handler to initiate a batch of work."""
-
+  # Can't use login_required decorator here because it is not
+  # supported for POST requests
   def post(self):  # pylint:disable-msg=C0103
     """A handler which will spawn work for random row, column pairs.
 
@@ -54,18 +55,22 @@ class BeginWork(webapp2.RequestHandler):
 
     Uses the user ID of the logged in user as a proxy for session ID.
     """
+    response = {'batch_populated': False}
     try:
+      # Will raise an AttributeError if no current user
       user_id = users.get_current_user().user_id()
-
+      # TODO: return 400 if not logged in
       work = []
       for row, column in RandomRowColumnOrdering(ROWS, COLUMNS):
         args = (row, column, user_id)
         work.append((SendColor, args, {}))  # No keyword args
 
       PopulateBatch(user_id, work)
-      self.response.out.write(json.dumps({'batch_populated': True}))
+      response['batch_populated'] = True
     except:  # pylint:disable-msg=W0702
-      self.response.out.write(json.dumps({'batch_populated': False}))
+      # TODO: Consider logging traceback.format_exception(*sys.exc_info()) here
+      pass
+    self.response.out.write(json.dumps(response))
 
 
 class MainPage(webapp2.RequestHandler):
