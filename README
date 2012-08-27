@@ -1,7 +1,8 @@
-Still a work in progress. Docstrings to come.
-
 The pipeline API is a higher level way to orchestrate task queues (this has been merged since in the mapreduce API we ship with the SDK):
 http://code.google.com/p/appengine-pipeline/
 
 There is also a third party library for doing similar task queue orchestration:
 http://code.google.com/p/fantasm/
+
+See blog post:
+http://blog.bossylobster.com/2012/08/last-to-cross-finish-line-part-one.html

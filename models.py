@@ -67,6 +67,7 @@ class BatchTask(ndb.Model):
   """Model to represent a task and the status of the task."""
   # pylint:disable-msg=E1101
   completed = ndb.BooleanProperty(default=False, indexed=False)
+  # pylint:enable-msg=E1101
 
   @ndb.transactional
   def Populate(self, method, *args, **kwargs):
@@ -113,6 +114,7 @@ class TaskBatcher(ndb.Model):
   """
   # pylint:disable-msg=E1101
   all_tasks_loaded = ndb.BooleanProperty(default=False, indexed=False)
+  # pylint:enable-msg=E1101
 
   def CheckComplete(self):
     """Checks if all tasks with this object as parent have complete.

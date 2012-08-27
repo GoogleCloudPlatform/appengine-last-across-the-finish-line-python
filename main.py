@@ -105,3 +105,4 @@ class MainPage(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([('/begin-work', BeginWork),
                                ('/', MainPage)],
                               debug=True)
+# pylint:enable-msg=C0103
