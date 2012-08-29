@@ -65,9 +65,7 @@ def AlwaysComplete(task, method, *args, **kwargs):
 
 class BatchTask(ndb.Model):
   """Model to represent a task and the status of the task."""
-  # pylint:disable-msg=E1101
-  completed = ndb.BooleanProperty(default=False, indexed=False)
-  # pylint:enable-msg=E1101
+  completed = ndb.BooleanProperty(default=False)  # pylint:disable-msg=E1101
 
   @ndb.transactional
   def Populate(self, method, *args, **kwargs):
