@@ -21,10 +21,16 @@ task queue orchestration.
 
 ## APIs
 - [NDB Datastore API][6]
+- [Taskqueue API][9]
+- [Deferred Libary][13]
+- [Channel API][10]
+- [Users API][11]
+- [Datastore Transactions][14]
 
 ## Dependencies
 - [webapp2][7]
 - [jinja2][8]
+- [jQuery][12]
 
 
 [1]: http://blog.bossylobster.com/2012/08/last-to-cross-finish-line-part-one.html
@@ -35,3 +41,9 @@ task queue orchestration.
 [6]: https://developers.google.com/appengine/docs/python/ndb/
 [7]: http://webapp-improved.appspot.com/
 [8]: http://jinja.pocoo.org/docs/
+[9]: https://developers.google.com/appengine/docs/python/taskqueue/
+[10]: https://developers.google.com/appengine/docs/python/channel/overview/
+[11]: https://developers.google.com/appengine/docs/python/users/
+[12]: http://jquery.com/
+[13]: https://developers.google.com/appengine/articles/deferred
+[14]: https://developers.google.com/appengine/docs/python/datastore/transactions
