@@ -27,29 +27,35 @@ import random
 
 # App engine specific libraries
 from google.appengine.api import channel
+from jinja2 import Template
 
 
 HEX_DIGITS = '0123456789ABCDEF'
+TABLE_TEMPLATE = Template("""\
+<table id="{{ table_id }}">
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      {% for column in columns %}
+      <td id="square{{ columns|length * row + column }}" />
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>""")
 
 
-def GenerateTable(table_id, rows, columns):
+def GenerateTable(table_id, num_rows, num_columns):
   """Generates an HTML table with a fixed number of rows and columns.
 
   Args:
     table_id: An HTML ID for the table created
-    rows: The number of rows in the table
-    columns: The number of columns in the table
+    num_rows: The number of rows in the table
+    num_columns: The number of columns in the table
   """
-  table_elts = ['<table id="{}">'.format(table_id), '<tbody>']
-  for row in range(rows):
-    row_add = ['<tr>']
-    for column in range(columns):
-      index = columns*row + column
-      row_add.append('<td id="square{}" />'.format(index))
-    row_add.append('</tr>')
-    table_elts.extend(row_add)
-  table_elts.extend(['</tbody>', '</table>'])
-  return '\n'.join(table_elts)
+  return TABLE_TEMPLATE.render(table_id=table_id,
+                               rows=range(num_rows),
+                               columns=range(num_columns))
 
 
 def RandomRowColumnOrdering(rows, columns):
