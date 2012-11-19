@@ -30,12 +30,14 @@
     <script type="text/javascript">
       var COLUMNS = 8;
 
-      var setStatus = function(value) {
-        if (value !== 'complete') {
-          $('#waitingWheel').show();
-        } else {
-          $('#waitingWheel').hide();
+      var consoleLog = function(value) {
+        if (window.console) {
+          window.console.log(value);
         }
+      }
+
+      var setStatus = function(value) {
+        $('#waitingWheel').toggle(value !== 'complete');
       }
 
       var colorSquare = function(row, column, color) {
@@ -45,15 +47,15 @@
       }
 
       var onOpened = function() {
-        console.log('Socket opened');
+        consoleLog('Socket opened');
         $.post('/begin-work', function(data) {
           var response = JSON.parse(data);
 
           if (response.batch_populated) {
-            console.log('Loading began');
+            consoleLog('Loading began');
             setStatus('Loading began');
           } else {
-            console.log('Loading failed');
+            consoleLog('Loading failed');
           }
         });
       }
@@ -68,11 +70,11 @@
       }
 
       var onError = function() {
-        console.log('Socket error');
+        consoleLog('Socket error');
       }
 
       var onClose = function() {
-        console.log('Socket closed');
+        consoleLog('Socket closed');
       }
 
       channel = new goog.appengine.Channel('{{ token }}');

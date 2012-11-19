@@ -65,13 +65,7 @@ def RandomRowColumnOrdering(rows, columns):
   """
   square_indices = range(rows*columns)
   random.shuffle(square_indices)
-
-  result = []
-  for index in square_indices:
-    row = index / columns  # Integer division intended
-    column = index % columns
-    result.append((row, column))
-  return result
+  return [divmod(index, columns) for index in square_indices]
 
 
 def RandHexColor(length=6):

@@ -1,8 +1,8 @@
 # Last Across the Finish Line
 
-"Last Across the Finish Line" is an example application which showcases a
-pattern for tracking asynchronous batch workers and notifying a user that
-when all the workers have completed.
+"Last Across the Finish Line" is an example application that uses the Task Queue
+API to showcase a pattern for tracking asynchronous batch workers and notifying
+a user that when all the workers have completed.
 
 This was described in detail in a three part [blog post][1] from one of the
 Google App Engine team members.
@@ -21,7 +21,7 @@ task queue orchestration.
 
 ## APIs
 - [NDB Datastore API][6]
-- [Taskqueue API][9]
+- [Task Queue API][9]
 - [Deferred Libary][13]
 - [Channel API][10]
 - [Users API][11]
