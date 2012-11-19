@@ -1,4 +1,4 @@
-# Guestbook
+# Last Across the Finish Line
 
 "Last Across the Finish Line" is an example application which showcases a
 pattern for tracking asynchronous batch workers and notifying a user that
