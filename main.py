@@ -32,7 +32,6 @@ import webapp2
 from webapp2_extras import jinja2
 
 # App specific libraries
-from display import GenerateTable
 from display import RandomRowColumnOrdering
 from display import SendColor
 from models import PopulateBatch
@@ -40,6 +39,7 @@ from models import PopulateBatch
 
 COLUMNS = 8
 ROWS = 8
+TABLE_ID = 'pixels'
 
 
 class BeginWork(webapp2.RequestHandler):
@@ -97,8 +97,8 @@ class MainPage(webapp2.RequestHandler):
     """
     user_id = users.get_current_user().user_id()
     token = channel.create_channel(user_id)
-    table = GenerateTable('pixels', ROWS, COLUMNS)
-    self.RenderResponse('main.html', token=token, table=table)
+    self.RenderResponse('main.html', token=token, table_id=TABLE_ID,
+                        rows=ROWS, columns=COLUMNS)
 
 
 # pylint:disable-msg=C0103

@@ -27,35 +27,9 @@ import random
 
 # App engine specific libraries
 from google.appengine.api import channel
-from jinja2 import Template
 
 
 HEX_DIGITS = '0123456789ABCDEF'
-TABLE_TEMPLATE = Template("""\
-<table id="{{ table_id }}">
-  <tbody>
-    {% for row in rows %}
-    <tr>
-      {% for column in columns %}
-      <td id="square{{ columns|length * row + column }}" />
-      {% endfor %}
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>""")
-
-
-def GenerateTable(table_id, num_rows, num_columns):
-  """Generates an HTML table with a fixed number of rows and columns.
-
-  Args:
-    table_id: An HTML ID for the table created
-    num_rows: The number of rows in the table
-    num_columns: The number of columns in the table
-  """
-  return TABLE_TEMPLATE.render(table_id=table_id,
-                               rows=range(num_rows),
-                               columns=range(num_columns))
 
 
 def RandomRowColumnOrdering(rows, columns):
