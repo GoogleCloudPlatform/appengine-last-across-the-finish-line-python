@@ -174,7 +174,7 @@ def _PopulateBatch(session_id, work):
   """
   batcher_key = ndb.Key(TaskBatcher, session_id)
   batcher = TaskBatcher(key=batcher_key)
-  ndb.transaction(batcher.put)
+  batcher.put()
 
   for method, args, kwargs in work:
     task = BatchTask(parent=batcher_key)
