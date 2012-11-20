@@ -35,9 +35,6 @@ from google.appengine.ext.deferred import defer
 from google.appengine.ext import ndb
 
 
-MAX_KEYS = 100
-
-
 def AlwaysComplete(task, method, *args, **kwargs):
   """Attempt to run a method and complete a task upon completion or failure.
 
@@ -155,18 +152,14 @@ class TaskBatcher(ndb.Model):
   def CleanUp(self):
     """Cleans up task batcher and all children.
 
-    Attempts to fetch MAX_KEYS child tasks by key only. If this fetch has
-    any elements, they are deleted by key, and then CleanUp recursively calls
-    itself. Otherwise, the key of the task batcher is used to delete itself.
+    Attempts to iterate over child tasks by key only and delete them all, then
+    delete the parent. Since the only callers of this method do so in a deferred
+    task, if this times out, the task will retry and have many fewer entries to
+    delete.
     """
-    children = BatchTask.query(ancestor=self.key).fetch(
-        MAX_KEYS, keys_only=True)
-
-    if children:
-      ndb.delete_multi(children)
-      defer(self.CleanUp, _transactional=True)
-    else:
-      self.key.delete()
+    children = BatchTask.query(ancestor=self.key).iter(keys_only=True)
+    ndb.delete_multi(children)
+    self.key.delete()
 
 
 def _PopulateBatch(session_id, work):
