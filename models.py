@@ -131,7 +131,7 @@ class TaskBatcher(ndb.Model):
                                    ancestor=self.key).fetch(1)
       if len(incomplete) == 0:
         channel.send_message(session_id, json.dumps({'status': 'complete'}))
-        self.CleanUp()
+        defer(self.CleanUp)
         return
 
     channel.send_message(session_id, json.dumps({'status': 'incomplete'}))
@@ -148,7 +148,6 @@ class TaskBatcher(ndb.Model):
 
     self.CheckComplete()
 
-  @ndb.transactional
   def CleanUp(self):
     """Cleans up task batcher and all children.
 
